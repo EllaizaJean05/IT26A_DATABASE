@@ -3,6 +3,8 @@ package smart_serve_system;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import java.sql.SQLException;
 
 public class AdminLogin extends javax.swing.JPanel {
 
@@ -141,28 +143,46 @@ public class AdminLogin extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
     String username = jTextField1.getText().trim();
-    String password = String.valueOf(jPasswordField1.getPassword()).trim();
+    String password = new String(jPasswordField1.getPassword()).trim();
+
+    if (username.isEmpty() || password.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter username and password!");
+        return;
+    }
+
+    Connection con = DBConnection.getConnection();
+    if (con == null) {
+        JOptionPane.showMessageDialog(this, "Database connection failed. Cannot login.");
+        return;
+    }
 
     try {
-        java.sql.Connection con = DBConnection.getConnection();
-
-        String sql = "SELECT * FROM users WHERE username=? AND password=?";
-        java.sql.PreparedStatement pst = con.prepareStatement(sql);
+        String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+        PreparedStatement pst = con.prepareStatement(sql);
         pst.setString(1, username);
         pst.setString(2, password);
 
-        java.sql.ResultSet rs = pst.executeQuery();
+        ResultSet rs = pst.executeQuery();
 
-        if(rs.next()){
-            javax.swing.JOptionPane.showMessageDialog(this, "Login Successful!");
+        if (rs.next()) {
+            JOptionPane.showMessageDialog(this, "Login successful!");
+            // Open dashboard
+            AdminDashboard dash = new AdminDashboard();
+            dash.setVisible(true);
+            // Close login form
+            javax.swing.SwingUtilities.getWindowAncestor(this).dispose();
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "Invalid Username or Password!");
+            JOptionPane.showMessageDialog(this, "Invalid username or password.");
         }
 
-    } catch (Exception e) {
-        javax.swing.JOptionPane.showMessageDialog(this, e.getMessage());
-    }
+        rs.close();
+        pst.close();
+        con.close();
 
+    }
+    catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+    }
 
 
     }//GEN-LAST:event_jButton1ActionPerformed

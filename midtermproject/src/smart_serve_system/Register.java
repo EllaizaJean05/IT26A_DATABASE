@@ -3,6 +3,9 @@ package smart_serve_system;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import javax.swing.JOptionPane;
+import java.sql.SQLException;
+
 
 public class Register extends javax.swing.JPanel {
 
@@ -126,24 +129,54 @@ public class Register extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
     String username = jTextField1.getText().trim();
-    String password = String.valueOf(jPasswordField1.getPassword()).trim();
+    String password = new String(jPasswordField1.getPassword()).trim();
+
+    if (username.isEmpty() || password.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter username and password!");
+        return;
+    }
+
+    Connection con = DBConnection.getConnection();
+    if (con == null) {
+        JOptionPane.showMessageDialog(this, "Database connection failed. Cannot register.");
+        return;
+    }
 
     try {
-        java.sql.Connection con = DBConnection.getConnection();
+        // Check if username already exists
+        String checkSql = "SELECT * FROM users WHERE username = ?";
+        PreparedStatement checkStmt = con.prepareStatement(checkSql);
+        checkStmt.setString(1, username);
+        ResultSet rs = checkStmt.executeQuery();
 
-        String sql = "INSERT INTO users (username, password) VALUES (?, ?)";
-        java.sql.PreparedStatement pst = con.prepareStatement(sql);
-        pst.setString(1, username);
-        pst.setString(2, password);
+        if (rs.next()) {
+            JOptionPane.showMessageDialog(this, "Username already exists. Choose another.");
+        } else {
+            // Insert new user
+            String insertSql = "INSERT INTO users (username, password) VALUES (?, ?)";
+            PreparedStatement insertStmt = con.prepareStatement(insertSql);
+            insertStmt.setString(1, username);
+            insertStmt.setString(2, password); // ideally, hash the password!
+            insertStmt.executeUpdate();
 
-        pst.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Registration successful!");
 
-        javax.swing.JOptionPane.showMessageDialog(this, "Registered Successfully!");
+            // Automatically go back to login panel
+            AdminLogin loginPanel = new AdminLogin();
+            javax.swing.JFrame parentFrame = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+            parentFrame.getContentPane().removeAll();
+            parentFrame.getContentPane().add(loginPanel);
+            parentFrame.revalidate();
+            parentFrame.repaint();
+        }
 
-    } catch (Exception e) {
-        javax.swing.JOptionPane.showMessageDialog(this, e.getMessage());
-    
-}
+        rs.close();
+        checkStmt.close();
+        con.close();
+
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+    }
 
     
     }//GEN-LAST:event_jButton1ActionPerformed
