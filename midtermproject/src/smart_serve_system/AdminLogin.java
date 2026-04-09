@@ -1,13 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package smart_serve_system;
 
-/**
- *
- * @author ACER
- */
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
 public class AdminLogin extends javax.swing.JPanel {
 
     /**
@@ -65,10 +61,20 @@ public class AdminLogin extends javax.swing.JPanel {
         jButton1.setBackground(new java.awt.Color(102, 255, 102));
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton1.setText("LOGIN");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setBackground(new java.awt.Color(0, 153, 153));
         jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton2.setText("REGISTER HERE");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -126,13 +132,67 @@ public class AdminLogin extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-       
+
     }//GEN-LAST:event_jTextField1ActionPerformed
 
     private void jPasswordField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jPasswordField1ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    String username = jTextField1.getText().trim();
+    String password = String.valueOf(jPasswordField1.getPassword()).trim();
+
+    try {
+        java.sql.Connection con = DBConnection.getConnection();
+
+        String sql = "SELECT * FROM users WHERE username=? AND password=?";
+        java.sql.PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, username);
+        pst.setString(2, password);
+
+        java.sql.ResultSet rs = pst.executeQuery();
+
+        if(rs.next()){
+            javax.swing.JOptionPane.showMessageDialog(this, "Login Successful!");
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Invalid Username or Password!");
+        }
+
+    } catch (Exception e) {
+        javax.swing.JOptionPane.showMessageDialog(this, e.getMessage());
+    }
+
+
+
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    javax.swing.JFrame frame = new javax.swing.JFrame("Register");
+    frame.setSize(400, 400);
+    frame.setLocationRelativeTo(null);
+    frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+
+    frame.setContentPane(new Register()); // THIS is the important part
+    frame.setVisible(true);
+
+    // close current login window
+    javax.swing.SwingUtilities.getWindowAncestor(this).dispose();
+
+    }//GEN-LAST:event_jButton2ActionPerformed
+    public static void main(String[] args) {
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                javax.swing.JFrame frame = new javax.swing.JFrame("Admin Login");
+                frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+                frame.setSize(400, 400);
+                frame.setLocationRelativeTo(null);
+
+                frame.setContentPane(new AdminLogin()); // your panel
+                frame.setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

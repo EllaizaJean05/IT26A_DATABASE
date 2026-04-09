@@ -1,10 +1,15 @@
+
 package smart_serve_system;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class Register extends javax.swing.JPanel {
 
     public Register() {
         initComponents();
     }
+    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -120,16 +125,55 @@ public class Register extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    String username = jTextField1.getText().trim();
+    String password = String.valueOf(jPasswordField1.getPassword()).trim();
 
+    try {
+        java.sql.Connection con = DBConnection.getConnection();
+
+        String sql = "INSERT INTO users (username, password) VALUES (?, ?)";
+        java.sql.PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, username);
+        pst.setString(2, password);
+
+        pst.executeUpdate();
+
+        javax.swing.JOptionPane.showMessageDialog(this, "Registered Successfully!");
+
+    } catch (Exception e) {
+        javax.swing.JOptionPane.showMessageDialog(this, e.getMessage());
+    
+}
+
+    
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        javax.swing.JFrame frame = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-        frame.setContentPane(new AdminLogin());
-        frame.revalidate();
+    javax.swing.JFrame frame = new javax.swing.JFrame("Login");
+    frame.setSize(400, 400);
+    frame.setLocationRelativeTo(null);
+    frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+
+    frame.setContentPane(new AdminLogin()); // load login panel
+    frame.setVisible(true);
+
+    // close current register window
+    javax.swing.SwingUtilities.getWindowAncestor(this).dispose();
+
     }//GEN-LAST:event_jButton2ActionPerformed
+    public static void main(String[] args) {
+    javax.swing.SwingUtilities.invokeLater(new Runnable() {
+        public void run() {
+            javax.swing.JFrame frame = new javax.swing.JFrame("Register");
+            frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+            frame.setSize(400, 400);
+            frame.setLocationRelativeTo(null); // center screen
 
-
+            frame.setContentPane(new Register()); // put your panel inside frame
+            frame.setVisible(true);
+        }
+    });
+}
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

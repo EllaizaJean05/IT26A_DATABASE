@@ -1,6 +1,6 @@
-package smart_serve_system;
+package midtermproject;
 
-import java.sql.Connection;          // ✅ MUST be java.sql.Connection
+import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DBConnection {
@@ -9,7 +9,8 @@ public class DBConnection {
         Connection con = null;
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver"); // load driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
             con = DriverManager.getConnection(
                 "jdbc:mysql://localhost:3306/smartserve", "root", ""
             );
@@ -21,3 +22,7 @@ public class DBConnection {
         return con;
     }
 }
+
+
+    
+
