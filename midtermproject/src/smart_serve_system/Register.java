@@ -1,18 +1,17 @@
-
 package smart_serve_system;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import java.sql.SQLException;
-
+import javax.swing.SwingUtilities;
 
 public class Register extends javax.swing.JPanel {
 
     public Register() {
         initComponents();
     }
-    
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -128,85 +127,90 @@ public class Register extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    String username = jTextField1.getText().trim();
-    String password = new String(jPasswordField1.getPassword()).trim();
+        String username = jTextField1.getText().trim();
+        String password = new String(jPasswordField1.getPassword()).trim();
 
-    if (username.isEmpty() || password.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Please enter username and password!");
-        return;
-    }
-
-    Connection con = DBConnection.getConnection();
-    if (con == null) {
-        JOptionPane.showMessageDialog(this, "Database connection failed. Cannot register.");
-        return;
-    }
-
-    try {
-        // Check if username already exists
-        String checkSql = "SELECT * FROM users WHERE username = ?";
-        PreparedStatement checkStmt = con.prepareStatement(checkSql);
-        checkStmt.setString(1, username);
-        ResultSet rs = checkStmt.executeQuery();
-
-        if (rs.next()) {
-            JOptionPane.showMessageDialog(this, "Username already exists. Choose another.");
-        } else {
-            // Insert new user
-            String insertSql = "INSERT INTO users (username, password) VALUES (?, ?)";
-            PreparedStatement insertStmt = con.prepareStatement(insertSql);
-            insertStmt.setString(1, username);
-            insertStmt.setString(2, password); // ideally, hash the password!
-            insertStmt.executeUpdate();
-
-            JOptionPane.showMessageDialog(this, "Registration successful!");
-
-            // Automatically go back to login panel
-            AdminLogin loginPanel = new AdminLogin();
-            javax.swing.JFrame parentFrame = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-            parentFrame.getContentPane().removeAll();
-            parentFrame.getContentPane().add(loginPanel);
-            parentFrame.revalidate();
-            parentFrame.repaint();
+        // 1. Validate inputs
+        if (username.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter username and password!");
+            return;
         }
 
-        rs.close();
-        checkStmt.close();
-        con.close();
+        // 2. Get database connection
+        Connection con = DBConnection.getConnection();
+        if (con == null) {
+            JOptionPane.showMessageDialog(this, "Database connection failed. Cannot register.");
+            return;
+        }
 
-    } catch (SQLException e) {
-        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-    }
+        try {
+            // 3. Check if username already exists
+            String checkSql = "SELECT * FROM users WHERE username = ?";
+            PreparedStatement checkStmt = con.prepareStatement(checkSql);
+            checkStmt.setString(1, username);
+            ResultSet rs = checkStmt.executeQuery();
 
-    
+            if (rs.next()) {
+                JOptionPane.showMessageDialog(this, "Username already exists. Choose another.");
+            } else {
+                // 4. Insert new user
+                String insertSql = "INSERT INTO users (username, password) VALUES (?, ?)";
+                PreparedStatement insertStmt = con.prepareStatement(insertSql);
+                insertStmt.setString(1, username);
+                insertStmt.setString(2, password); // ideally, hash the password!
+                insertStmt.executeUpdate();
+
+                JOptionPane.showMessageDialog(this, "Registration successful!");
+                // Get the parent JFrame
+                AdminLogin loginPanel = new AdminLogin();
+                javax.swing.JFrame parentFrame = (javax.swing.JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+
+// Remove current panel and add login panel
+                parentFrame.getContentPane().removeAll();
+                parentFrame.getContentPane().add(new AdminLogin()); // create a new AdminLogin panel
+                parentFrame.revalidate();
+                parentFrame.repaint();
+
+            }
+
+            // 6. Close resources
+            rs.close();
+            checkStmt.close();
+            con.close();
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-    javax.swing.JFrame frame = new javax.swing.JFrame("Login");
-    frame.setSize(400, 400);
-    frame.setLocationRelativeTo(null);
-    frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+        javax.swing.JFrame frame = new javax.swing.JFrame("Login");
+        frame.setSize(400, 400);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
 
-    frame.setContentPane(new AdminLogin()); // load login panel
-    frame.setVisible(true);
+        frame.setContentPane(new AdminLogin()); // load login panel
+        frame.setVisible(true);
 
-    // close current register window
-    javax.swing.SwingUtilities.getWindowAncestor(this).dispose();
+        // close current register window
+        javax.swing.SwingUtilities.getWindowAncestor(this).dispose();
 
     }//GEN-LAST:event_jButton2ActionPerformed
     public static void main(String[] args) {
-    javax.swing.SwingUtilities.invokeLater(new Runnable() {
-        public void run() {
-            javax.swing.JFrame frame = new javax.swing.JFrame("Register");
-            frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-            frame.setSize(400, 400);
-            frame.setLocationRelativeTo(null); // center screen
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                javax.swing.JFrame frame = new javax.swing.JFrame("Register");
+                frame.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+                frame.setSize(400, 400);
+                frame.setLocationRelativeTo(null); // center screen
 
-            frame.setContentPane(new Register()); // put your panel inside frame
-            frame.setVisible(true);
-        }
-    });
-}
+                frame.setContentPane(new Register()); // put your panel inside frame
+                frame.setVisible(true);
+            }
+        });
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
