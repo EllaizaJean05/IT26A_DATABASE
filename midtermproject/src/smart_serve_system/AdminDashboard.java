@@ -1,10 +1,25 @@
 package smart_serve_system;
 
-public class AdminDashboard extends javax.swing.JFrame {
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
+public class AdminDashboard extends javax.swing.JFrame {
 
     public AdminDashboard() {
         initComponents();
+        setupCardLayout();
+    }
+
+    private void setupCardLayout() {
+        mainPanel.removeAll();
+
+        mainPanel.add(dashboardPanel, "dashboardPanel");
+        mainPanel.add(manageMenuPanel, "manageMenuPanel");
+        mainPanel.add(viewOrderPanel, "viewOrdersPanel");
+        mainPanel.add(customersPanel, "customersPanel");
+
+        mainPanel.revalidate();
+        mainPanel.repaint();
     }
 
     /**
@@ -16,90 +31,382 @@ public class AdminDashboard extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel7 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        mainPanel = new javax.swing.JPanel();
+        dashboardPanel = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel5 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jPanel8 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel5 = new javax.swing.JLabel();
+        viewOrderPanel = new javax.swing.JPanel();
+        customersPanel = new javax.swing.JPanel();
+        manageMenuPanel = new javax.swing.JPanel();
+        txtName = new javax.swing.JTextField();
+        txtPrice = new javax.swing.JTextField();
+        chkAvailable = new javax.swing.JCheckBox();
+        cmbCategory = new javax.swing.JComboBox<>();
+        jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblMenu = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBackground(new java.awt.Color(153, 153, 255));
+        jPanel7.setBackground(new java.awt.Color(204, 255, 255));
+        jPanel7.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel1.setText("SmartServe");
+        jLabel1.setHorizontalTextPosition(javax.swing.SwingConstants.LEADING);
+        jPanel7.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 230, 60));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("WELCOME ADMIN!");
+        jPanel7.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 40, 733, 60));
+
+        getContentPane().add(jPanel7, java.awt.BorderLayout.PAGE_START);
+
+        jPanel1.setBackground(new java.awt.Color(102, 102, 255));
+        jPanel1.setPreferredSize(new java.awt.Dimension(160, 0));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel2.setBackground(new java.awt.Color(204, 204, 204));
-        jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        jPanel2.setLayout(new javax.swing.BoxLayout(jPanel2, javax.swing.BoxLayout.Y_AXIS));
-
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jButton1.setText("Dashboard");
+        jButton1.setBackground(new java.awt.Color(153, 255, 153));
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton1.setText("DASHBOARD");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton1);
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 140, -1));
 
-        jButton2.setText("Manage Menu");
+        jButton2.setBackground(new java.awt.Color(153, 255, 153));
+        jButton2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton2.setText("MANAGE MENU");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton2);
+        jPanel1.add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 70, 140, 20));
 
-        jButton3.setText("View Orders");
+        jButton3.setBackground(new java.awt.Color(153, 255, 153));
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton3.setText("VIEW ORDERS");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton3);
+        jPanel1.add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 140, -1));
 
-        jButton4.setText("Customers");
+        jButton4.setBackground(new java.awt.Color(153, 255, 153));
+        jButton4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton4.setText("CUSTOMERS");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton4ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton4);
+        jPanel1.add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 160, 140, -1));
 
-        jButton5.setText("Logout");
+        jButton5.setBackground(new java.awt.Color(153, 255, 153));
+        jButton5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton5.setText("LOGOUT");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
             }
         });
-        jPanel2.add(jButton5);
+        jPanel1.add(jButton5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, -1, -1));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 180, 550));
+        getContentPane().add(jPanel1, java.awt.BorderLayout.LINE_START);
 
-        getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
+        mainPanel.setLayout(new java.awt.CardLayout());
+
+        dashboardPanel.setBackground(new java.awt.Color(153, 153, 255));
+        dashboardPanel.setLayout(new java.awt.BorderLayout());
+
+        jPanel4.setLayout(new java.awt.GridLayout(1, 3, 15, 15));
+
+        jPanel5.setBackground(new java.awt.Color(153, 255, 153));
+
+        jLabel3.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel3.setText("TOTAL ORDERS");
+        jPanel5.add(jLabel3);
+
+        jPanel4.add(jPanel5);
+
+        jPanel8.setBackground(new java.awt.Color(153, 255, 153));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setText("TOTAL REVENUE");
+        jPanel8.add(jLabel4);
+
+        jPanel4.add(jPanel8);
+
+        jPanel6.setBackground(new java.awt.Color(153, 255, 153));
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel5.setText("MENU ITEMS ");
+        jPanel6.add(jLabel5);
+
+        jPanel4.add(jPanel6);
+
+        dashboardPanel.add(jPanel4, java.awt.BorderLayout.CENTER);
+
+        mainPanel.add(dashboardPanel, "card2");
+
+        viewOrderPanel.setBackground(new java.awt.Color(153, 204, 255));
+        mainPanel.add(viewOrderPanel, "card4");
+
+        customersPanel.setBackground(new java.awt.Color(204, 102, 255));
+        mainPanel.add(customersPanel, "card5");
+
+        manageMenuPanel.setBackground(new java.awt.Color(102, 153, 255));
+        manageMenuPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        txtName.setText("Name");
+        txtName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNameActionPerformed(evt);
+            }
+        });
+        manageMenuPanel.add(txtName, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
+
+        txtPrice.setText("Price");
+        txtPrice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPriceActionPerformed(evt);
+            }
+        });
+        manageMenuPanel.add(txtPrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, -1, -1));
+
+        chkAvailable.setText("Available");
+        chkAvailable.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkAvailableActionPerformed(evt);
+            }
+        });
+        manageMenuPanel.add(chkAvailable, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, -1, -1));
+
+        cmbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        manageMenuPanel.add(cmbCategory, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, -1, -1));
+
+        jButton6.setText("UPDATE");
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+        manageMenuPanel.add(jButton6, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 180, -1, -1));
+
+        jButton7.setText("DELETE");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+        manageMenuPanel.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 180, -1, -1));
+
+        jButton8.setText("CLEAR");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+        manageMenuPanel.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 180, -1, -1));
+
+        jButton9.setText("ADD");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+        manageMenuPanel.add(jButton9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 180, -1, -1));
+
+        tblMenu.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "ID", "NAME", "PRICE", "CATEGORY", "AVAILABLE"
+            }
+        ));
+        tblMenu.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblMenuMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblMenu);
+
+        manageMenuPanel.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 10, -1, -1));
+
+        mainPanel.add(manageMenuPanel, "card3");
+
+        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        java.awt.CardLayout cl = (java.awt.CardLayout) (mainPanel.getLayout());
+        cl.show(mainPanel, "dashboardPanel");
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+
+        AdminLogin login = new AdminLogin();
+        login.setVisible(true);
+        this.dispose(); // close dashboard
+
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        java.awt.CardLayout cl = (java.awt.CardLayout) (mainPanel.getLayout());
+        cl.show(mainPanel, "customersPanel");
+
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        java.awt.CardLayout cl = (java.awt.CardLayout) (mainPanel.getLayout());
+        cl.show(mainPanel, "manageMenuPanel");
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        java.awt.CardLayout cl = (java.awt.CardLayout) (mainPanel.getLayout());
+        cl.show(mainPanel, "viewOrdersPanel");
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_txtNameActionPerformed
 
-    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        DefaultTableModel model = (DefaultTableModel) tblMenu.getModel();
+
+        String name = txtName.getText();
+        double price = Double.parseDouble(txtPrice.getText());
+        String category = cmbCategory.getSelectedItem().toString();
+        boolean available = chkAvailable.isSelected();
+
+        Connection con = DBConnection.getConnection();
+
+        try {
+            String sql = "INSERT INTO menu (name, price, category, available) VALUES (?, ?, ?, ?)";
+            PreparedStatement pst = con.prepareStatement(sql);
+
+            pst.setString(1, name);
+            pst.setDouble(2, price);
+            pst.setString(3, category);
+            pst.setBoolean(4, available);
+
+            pst.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "Menu Added!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+
+        }
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void tblMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMenuMouseClicked
+        int row = tblMenu.getSelectedRow();
+
+        txtName.setText(tblMenu.getValueAt(row, 1).toString());
+        txtPrice.setText(tblMenu.getValueAt(row, 2).toString());
+        cmbCategory.setSelectedItem(tblMenu.getValueAt(row, 3).toString());
+
+        String avail = tblMenu.getValueAt(row, 4).toString();
+        chkAvailable.setSelected(avail.equals("Yes"));
+    }//GEN-LAST:event_tblMenuMouseClicked
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        int selectedRow = tblMenu.getSelectedRow();
+
+        int id = (int) tblMenu.getValueAt(selectedRow, 0);
+
+        Connection con = DBConnection.getConnection();
+
+        try {
+            String sql = "UPDATE menu SET name=?, price=?, category=?, available=? WHERE id=?";
+            PreparedStatement pst = con.prepareStatement(sql);
+
+            pst.setString(1, txtName.getText());
+            pst.setDouble(2, Double.parseDouble(txtPrice.getText()));
+            pst.setString(3, cmbCategory.getSelectedItem().toString());
+            pst.setBoolean(4, chkAvailable.isSelected());
+            pst.setInt(5, id);
+
+            pst.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "Updated!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        int selectedRow = tblMenu.getSelectedRow();
+
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Select a row first!");
+            return;
+        }
+
+        int id = (int) tblMenu.getValueAt(selectedRow, 0);
+
+        Connection con = DBConnection.getConnection();
+
+        try {
+            String sql = "DELETE FROM menu WHERE id=?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, id);
+            pst.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "Deleted!");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage());
+        }
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        txtName.setText("");
+        txtPrice.setText("");
+        cmbCategory.setSelectedIndex(0);
+        chkAvailable.setSelected(false);
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void txtPriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPriceActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton5ActionPerformed
+    }//GEN-LAST:event_txtPriceActionPerformed
+
+    private void chkAvailableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkAvailableActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chkAvailableActionPerformed
 
     /**
      * @param args the command line arguments
@@ -137,12 +444,36 @@ public class AdminDashboard extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox chkAvailable;
+    private javax.swing.JComboBox<String> cmbCategory;
+    private javax.swing.JPanel customersPanel;
+    private javax.swing.JPanel dashboardPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel mainPanel;
+    private javax.swing.JPanel manageMenuPanel;
+    private javax.swing.JTable tblMenu;
+    private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtPrice;
+    private javax.swing.JPanel viewOrderPanel;
     // End of variables declaration//GEN-END:variables
 }
