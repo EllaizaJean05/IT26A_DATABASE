@@ -2,6 +2,10 @@ package smart_serve_system;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class AdminDashboard extends javax.swing.JFrame {
 
@@ -62,6 +66,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         jButton9 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblMenu = new javax.swing.JTable();
+        txtStock = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -188,7 +193,7 @@ public class AdminDashboard extends javax.swing.JFrame {
                 txtNameActionPerformed(evt);
             }
         });
-        manageMenuPanel.add(txtName, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, -1, -1));
+        manageMenuPanel.add(txtName, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 110, -1));
 
         txtPrice.setText("Price");
         txtPrice.addActionListener(new java.awt.event.ActionListener() {
@@ -196,7 +201,7 @@ public class AdminDashboard extends javax.swing.JFrame {
                 txtPriceActionPerformed(evt);
             }
         });
-        manageMenuPanel.add(txtPrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 30, -1, -1));
+        manageMenuPanel.add(txtPrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, -1, -1));
 
         chkAvailable.setText("Available");
         chkAvailable.addActionListener(new java.awt.event.ActionListener() {
@@ -204,9 +209,14 @@ public class AdminDashboard extends javax.swing.JFrame {
                 chkAvailableActionPerformed(evt);
             }
         });
-        manageMenuPanel.add(chkAvailable, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 130, -1, -1));
+        manageMenuPanel.add(chkAvailable, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 80, -1, -1));
 
-        cmbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbCategory.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Burger", "Fries", "Milk Tea", "Coffee", "Spaghetti", "Fried Chicken" }));
+        cmbCategory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbCategoryActionPerformed(evt);
+            }
+        });
         manageMenuPanel.add(cmbCategory, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 70, -1, -1));
 
         jButton6.setText("UPDATE");
@@ -223,7 +233,7 @@ public class AdminDashboard extends javax.swing.JFrame {
                 jButton7ActionPerformed(evt);
             }
         });
-        manageMenuPanel.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 180, -1, -1));
+        manageMenuPanel.add(jButton7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, -1, -1));
 
         jButton8.setText("CLEAR");
         jButton8.addActionListener(new java.awt.event.ActionListener() {
@@ -231,7 +241,7 @@ public class AdminDashboard extends javax.swing.JFrame {
                 jButton8ActionPerformed(evt);
             }
         });
-        manageMenuPanel.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 180, -1, -1));
+        manageMenuPanel.add(jButton8, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 220, -1, -1));
 
         jButton9.setText("ADD");
         jButton9.addActionListener(new java.awt.event.ActionListener() {
@@ -243,13 +253,14 @@ public class AdminDashboard extends javax.swing.JFrame {
 
         tblMenu.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "ID", "NAME", "PRICE", "CATEGORY", "AVAILABLE"
+                "ID", "NAME", "PRICE", "CATEGORY", "AVAILABLE", "STOCK"
             }
         ));
         tblMenu.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -259,7 +270,15 @@ public class AdminDashboard extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(tblMenu);
 
-        manageMenuPanel.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 10, -1, -1));
+        manageMenuPanel.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 0, -1, -1));
+
+        txtStock.setText("Stock");
+        txtStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtStockActionPerformed(evt);
+            }
+        });
+        manageMenuPanel.add(txtStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 110, -1, -1));
 
         mainPanel.add(manageMenuPanel, "card3");
 
@@ -306,31 +325,67 @@ public class AdminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNameActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        DefaultTableModel model = (DefaultTableModel) tblMenu.getModel();
+    DefaultTableModel model = (DefaultTableModel) tblMenu.getModel();
 
-        String name = txtName.getText();
-        double price = Double.parseDouble(txtPrice.getText());
+    try {
+        String name = txtName.getText().trim();
+        String priceText = txtPrice.getText().trim();
+        String stockText = txtStock.getText().trim();
+
+        if (name.isEmpty() || priceText.isEmpty() || stockText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Fill all fields!");
+            return;
+        }
+
+        double price = Double.parseDouble(priceText);
+        int stock = Integer.parseInt(stockText);
         String category = cmbCategory.getSelectedItem().toString();
         boolean available = chkAvailable.isSelected();
 
         Connection con = DBConnection.getConnection();
 
-        try {
-            String sql = "INSERT INTO menu (name, price, category, available) VALUES (?, ?, ?, ?)";
-            PreparedStatement pst = con.prepareStatement(sql);
+        String sql = "INSERT INTO menu (name, price, category, available, stock) VALUES (?, ?, ?, ?, ?)";
+        PreparedStatement pst = con.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS);
 
-            pst.setString(1, name);
-            pst.setDouble(2, price);
-            pst.setString(3, category);
-            pst.setBoolean(4, available);
+        pst.setString(1, name);
+        pst.setDouble(2, price);
+        pst.setString(3, category);
+        pst.setBoolean(4, available);
+        pst.setInt(5, stock);
 
-            pst.executeUpdate();
+        pst.executeUpdate();
 
-            JOptionPane.showMessageDialog(this, "Menu Added!");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
-
+        // ✅ GET REAL DATABASE ID
+        java.sql.ResultSet rs = pst.getGeneratedKeys();
+        int id = 0;
+        if (rs.next()) {
+            id = rs.getInt(1);
         }
+
+        // ✅ ADD TO TABLE
+        model.addRow(new Object[]{
+            id,
+            name,
+            price,
+            category,
+            available ? "Yes" : "No",
+            stock
+        });
+
+        JOptionPane.showMessageDialog(this, "Menu Added!");
+
+        // CLEAR
+        txtName.setText("");
+        txtPrice.setText("");
+        txtStock.setText("");
+        chkAvailable.setSelected(false);
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Price/Stock must be numbers!");
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, e.getMessage());
+    }
+
     }//GEN-LAST:event_jButton9ActionPerformed
 
     private void tblMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMenuMouseClicked
@@ -339,34 +394,56 @@ public class AdminDashboard extends javax.swing.JFrame {
         txtName.setText(tblMenu.getValueAt(row, 1).toString());
         txtPrice.setText(tblMenu.getValueAt(row, 2).toString());
         cmbCategory.setSelectedItem(tblMenu.getValueAt(row, 3).toString());
+        txtStock.setText(tblMenu.getValueAt(row, 5).toString());
 
         String avail = tblMenu.getValueAt(row, 4).toString();
         chkAvailable.setSelected(avail.equals("Yes"));
     }//GEN-LAST:event_tblMenuMouseClicked
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
-        int selectedRow = tblMenu.getSelectedRow();
+    int selectedRow = tblMenu.getSelectedRow();
 
-        int id = (int) tblMenu.getValueAt(selectedRow, 0);
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Select a row first!");
+        return;
+    }
+
+    try {
+        int id = Integer.parseInt(tblMenu.getValueAt(selectedRow, 0).toString());
 
         Connection con = DBConnection.getConnection();
 
-        try {
-            String sql = "UPDATE menu SET name=?, price=?, category=?, available=? WHERE id=?";
-            PreparedStatement pst = con.prepareStatement(sql);
+        String sql = "UPDATE menu SET name=?, price=?, category=?, available=?, stock=? WHERE id=?";
+        PreparedStatement pst = con.prepareStatement(sql);
 
-            pst.setString(1, txtName.getText());
-            pst.setDouble(2, Double.parseDouble(txtPrice.getText()));
-            pst.setString(3, cmbCategory.getSelectedItem().toString());
-            pst.setBoolean(4, chkAvailable.isSelected());
-            pst.setInt(5, id);
+        pst.setString(1, txtName.getText());
+        pst.setDouble(2, Double.parseDouble(txtPrice.getText()));
+        pst.setString(3, cmbCategory.getSelectedItem().toString());
+        pst.setBoolean(4, chkAvailable.isSelected());
+        pst.setInt(5, Integer.parseInt(txtStock.getText()));
+        pst.setInt(6, id);
 
-            pst.executeUpdate();
+        int rows = pst.executeUpdate();
+
+        if (rows > 0) {
+            // ✅ UPDATE TABLE ALSO
+            DefaultTableModel model = (DefaultTableModel) tblMenu.getModel();
+
+            model.setValueAt(txtName.getText(), selectedRow, 1);
+            model.setValueAt(txtPrice.getText(), selectedRow, 2);
+            model.setValueAt(cmbCategory.getSelectedItem().toString(), selectedRow, 3);
+            model.setValueAt(chkAvailable.isSelected() ? "Yes" : "No", selectedRow, 4);
+            model.setValueAt(txtStock.getText(), selectedRow, 5);
 
             JOptionPane.showMessageDialog(this, "Updated!");
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, e.getMessage());
+        } else {
+            JOptionPane.showMessageDialog(this, "Update failed!");
         }
+
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, e.getMessage());
+    }
+
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
@@ -387,9 +464,15 @@ public class AdminDashboard extends javax.swing.JFrame {
             pst.setInt(1, id);
             pst.executeUpdate();
 
+            // ✅ REMOVE FROM TABLE (IMPORTANT)
+            DefaultTableModel model = (DefaultTableModel) tblMenu.getModel();
+            model.removeRow(selectedRow);
+
             JOptionPane.showMessageDialog(this, "Deleted!");
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
+
         }
     }//GEN-LAST:event_jButton7ActionPerformed
 
@@ -398,6 +481,7 @@ public class AdminDashboard extends javax.swing.JFrame {
         txtPrice.setText("");
         cmbCategory.setSelectedIndex(0);
         chkAvailable.setSelected(false);
+        txtStock.setText("");
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void txtPriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPriceActionPerformed
@@ -405,8 +489,48 @@ public class AdminDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPriceActionPerformed
 
     private void chkAvailableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkAvailableActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_chkAvailableActionPerformed
+
+    private void cmbCategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCategoryActionPerformed
+        String selectedItem = cmbCategory.getSelectedItem().toString();
+
+        switch (selectedItem) {
+            case "Burger":
+                txtName.setText("Burger");
+                txtPrice.setText("120");
+                break;
+
+            case "Fries":
+                txtName.setText("Fries");
+                txtPrice.setText("80");
+                break;
+
+            case "Milk Tea":
+                txtName.setText("Milk Tea");
+                txtPrice.setText("70");
+                break;
+
+            case "Coffee":
+                txtName.setText("Coffee");
+                txtPrice.setText("60");
+                break;
+
+            case "Spaghetti":
+                txtName.setText("Spaghetti");
+                txtPrice.setText("100");
+                break;
+
+            case "Fried Chicken":
+                txtName.setText("Fried Chicken");
+                txtPrice.setText("150");
+                break;
+        }
+    }//GEN-LAST:event_cmbCategoryActionPerformed
+
+    private void txtStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtStockActionPerformed
+
+    }//GEN-LAST:event_txtStockActionPerformed
 
     /**
      * @param args the command line arguments
@@ -474,6 +598,7 @@ public class AdminDashboard extends javax.swing.JFrame {
     private javax.swing.JTable tblMenu;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtPrice;
+    private javax.swing.JTextField txtStock;
     private javax.swing.JPanel viewOrderPanel;
     // End of variables declaration//GEN-END:variables
 }
